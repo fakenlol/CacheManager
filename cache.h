@@ -41,7 +41,11 @@ bool CacheManager <T>::write_file(string key , T obj) {
 // INSERT
 template <class T>
 void CacheManager <T>::insert(string key , T obj) {
-
+    cout << "hola" << '\n';
+    cache_data[key] = make_pair(obj, 1);
+    for(auto &item:cache_data){
+        cout << &item.first << endl;
+    }
 }
 
 template <class T>

@@ -11,9 +11,10 @@ class Student{
 
     public:
         static const string class_name; //Cada clase tiene un static llamado: class_name
-
+        Student() : id(0), value(0), data("") {} // Constructor predeterminado
         Student(int _key , int _value , const char* _data): id(_key), value(_value), data(_data) {}
 
+        friend ostream& operator <<(ostream&, Student );
         void print () {
             cout <<"Student Object: "<<id<<", "<<value <<", "<<data<<endl;
         };
@@ -21,17 +22,28 @@ class Student{
         ~Student (){};
 };
 
+ostream& operator <<(ostream& os, Student student) {
+    os << "Student("<<student.id<<","<<student.value<<","<<student.data<<")"<<endl;
+    return os;
+}
+
 const string Student :: class_name = "StudentClass";
 
 int main() {
-    CacheManager<Student> my_cache(3);
+    CacheManager<Student> my_cache(1);
 
     my_cache.insert("0", Student(0,22,"student1"));
-    my_cache.insert("1", Student(1,23,"student2"));
-    my_cache.insert("2", Student(2,25,"student3"));
+    my_cache.insert("1", Student(0,22,"student1"));
+    // my_cache.insert("1", Student(1,23,"student2"));
+    // my_cache.insert("2", Student(2,25,"student3"));
     // my_cache.insert("3", Student (3,29,"student4"));
 
     my_cache.show_cache();
+    
+    cout << "Resultado 1: ";
+    my_cache.get("1").print();
+    cout << "Resultado 2: "; 
+    my_cache.get("0").print();
 
     // cout << "---------------------- UPDATE----------------------- " << endl;
     

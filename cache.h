@@ -18,6 +18,7 @@ class CacheManager {
     fstream disk;
 
     void write_file(string, T);
+    void load_file();
 
     public:
         CacheManager(int); // recibe la capacidad en el int
@@ -27,7 +28,6 @@ class CacheManager {
         void show_cache();
 
         //File management
-        void load_file();
         void show_file_copy();
 };
 
@@ -35,11 +35,7 @@ template <class T>
 CacheManager<T>::CacheManager(int cap){
     capacity = cap;
     current_mru = 0;
-    // // Abrir el archivo al construir el objeto
-    // disk.open("disk.txt", ios::in | ios::out | ios::app);
-    // if (!disk.is_open()) {
-    //     cerr << "No se pudo abrir el archivo para lectura/escritura." << endl;
-    // }
+    load_file();
 }
 
 template <class T>
@@ -70,10 +66,21 @@ void CacheManager<T>::insert(string key, T obj) {
 
 template <class T>
 T CacheManager<T>::get(string key) {
-    if (cache_data.count(key))
-        return cache_data[key].first; // encontrado
-    else
-        return default_value; // no encontrado
+    
+    if (cache_data.count(key)){
+        cache_data[key].second++;
+        return cache_data[key].first;
+    } else if(file_data.count(key)) {
+        if (cache_data.size() == capacity) {
+            auto lru = min_element(cache_data.begin(), cache_data.end(), [](const pair<string, pair<T, int>>& a, const pair<string, pair<T, int>>& b) {
+                return a.second.second < b.second.second;
+            });
+            cache_data.erase(lru->first);
+        }
+        cache_data[key] = make_pair(file_data[key], current_mru++);
+        return cache_data[key].first;
+    }
+    return default_value; // no encontrado
 }
 
 template <class T>

@@ -48,14 +48,18 @@ const string Student :: class_name = "StudentClass";
 
 int main() {
     CacheManager<Student> my_cache(3);
-    my_cache.load_file();
+    
     my_cache.show_file_copy();
-    // my_cache.insert("0", Student(0,22,"student22"));
-    my_cache.insert("37", Student(1,23,"studiante"));
+    my_cache.insert("0", Student(0,22,"student22"));
+    // my_cache.insert("37", Student(1,23,"studiante"));
     // my_cache.insert("0", Student(2,24,"student4"));
     // my_cache.insert("2", Student(2,25,"student5"));
     // my_cache.insert("3", Student(3,29,"student4"));
     cout << "\nCache snapshot: \n";
+    my_cache.show_cache();
+
+    cout << "Get: " << endl;
+    cout << my_cache.get("0") << endl;
     my_cache.show_cache();
 
     // cout << "---------------------- UPDATE----------------------- " << endl;
